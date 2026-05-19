@@ -1,0 +1,15 @@
+export const technologies = [
+  'Node.js',
+  'React',
+  'Vite',
+  'TypeScript',
+  'Tailwind CSS',
+  'PostgreSQL',
+  'SQL Server',
+  'APIs REST',
+  'Docker',
+  'n8n',
+  'OpenAI API',
+  'GitHub',
+  'Hospedagem em nuvem',
+];
