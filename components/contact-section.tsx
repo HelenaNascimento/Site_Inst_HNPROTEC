@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Send, MessageCircle } from "lucide-react"
+import { AlertCircle, CheckCircle2, Mail, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -24,6 +24,35 @@ const serviceTypes = [
   "Outro",
 ]
 
+type SubmitStatus = "idle" | "sending" | "success" | "error"
+
+function getLeadSource() {
+  if (typeof window === "undefined") {
+    return "site"
+  }
+
+  const params = new URLSearchParams(window.location.search)
+  const source =
+    params.get("orcigem") ||
+    params.get("origem") ||
+    params.get("utm_source") ||
+    params.get("source")
+
+  if (source) {
+    return source
+  }
+
+  if (document.referrer) {
+    try {
+      return new URL(document.referrer).hostname
+    } catch {
+      return document.referrer
+    }
+  }
+
+  return "site"
+}
+
 export function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
@@ -33,25 +62,63 @@ export function ContactSection() {
     serviceType: "",
     message: "",
   })
+  const [status, setStatus] = useState<SubmitStatus>("idle")
+  const [feedbackMessage, setFeedbackMessage] = useState("")
+  const [quoteCode, setQuoteCode] = useState("")
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const texto = `Olá! Fiquei interessado em saber mais sobre os serviços oferecidos.
+    if (!formData.serviceType) {
+      setStatus("error")
+      setFeedbackMessage("Selecione o tipo de serviço desejado.")
+      return
+    }
 
-Nome: ${formData.name}
-Empresa: ${formData.company}
-E-mail: ${formData.email}
-WhatsApp: ${formData.whatsapp}
-Tipo de serviço: ${formData.serviceType}
+    setStatus("sending")
+    setFeedbackMessage("")
+    setQuoteCode("")
 
-Mensagem:
-${formData.message}`
+    try {
+      const response = await fetch("/api/orcamentos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          source: getLeadSource(),
+          pageUrl: window.location.href,
+        }),
+      })
 
-    const email = "comercial@hnprotec.com.br"
-    const url = `${email}?subject=Novo%20Orçamento&body=${encodeURIComponent(texto)}`
+      const result = await response.json()
 
-    window.open(url, "_blank")
+      if (!response.ok) {
+        throw new Error(result?.message || "Não foi possível enviar sua solicitação agora.")
+      }
+
+      setStatus("success")
+      setQuoteCode(result.quoteCode)
+      setFeedbackMessage(
+        `Solicitação enviada por e-mail. Protocolo do orçamento: ${result.quoteCode}.`,
+      )
+      setFormData({
+        name: "",
+        company: "",
+        email: "",
+        whatsapp: "",
+        serviceType: "",
+        message: "",
+      })
+    } catch (error) {
+      setStatus("error")
+      setFeedbackMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível enviar sua solicitação agora.",
+      )
+    }
   }
 
   return (
@@ -68,7 +135,7 @@ ${formData.message}`
           </h2>
 
           <p className="text-lg text-muted-foreground">
-            Entre em contato e solicite uma proposta para sua empresa.
+            Envie sua solicitação de orçamento por e-mail para nossa equipe comercial.
           </p>
         </div>
 
@@ -135,7 +202,7 @@ ${formData.message}`
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="whatsapp">WhatsApp</Label>
+                <Label htmlFor="whatsapp">Telefone ou WhatsApp</Label>
                 <Input
                   id="whatsapp"
                   name="whatsapp"
@@ -201,14 +268,32 @@ ${formData.message}`
               />
             </div>
 
+            {feedbackMessage && (
+              <div
+                className={`flex items-start gap-3 rounded-xl border p-4 text-sm ${
+                  status === "success"
+                    ? "border-primary/40 bg-primary/10 text-foreground"
+                    : "border-destructive/40 bg-destructive/10 text-foreground"
+                }`}
+              >
+                {status === "success" ? (
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                ) : (
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+                )}
+                <span>{feedbackMessage}</span>
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button
                 type="submit"
                 size="lg"
+                disabled={status === "sending"}
                 className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Send className="w-4 h-4 mr-2" />
-                Enviar solicitação
+                {status === "sending" ? "Enviando..." : "Enviar orçamento por e-mail"}
               </Button>
 
               <Button
@@ -218,16 +303,18 @@ ${formData.message}`
                 className="flex-1 border-border hover:bg-secondary"
                 asChild
               >
-                <a
-                  href="mailto:comercial@hnprotec.com.br"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Falar pelo WhatsApp
+                <a href="mailto:comercial@hnpro.tec.br">
+                  <Mail className="w-4 h-4 mr-2" />
+                  comercial@hnpro.tec.br
                 </a>
               </Button>
             </div>
+
+            {quoteCode && (
+              <p className="text-center text-xs text-muted-foreground">
+                Guarde o código {quoteCode} para acompanhar sua solicitação.
+              </p>
+            )}
           </form>
         </div>
       </div>
