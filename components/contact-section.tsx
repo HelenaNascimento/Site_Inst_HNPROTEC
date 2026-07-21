@@ -37,7 +37,7 @@ export function ContactSection() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const texto = `Olá! Recebi uma nova solicitação de orçamento pelo site HNPRO.TEC.BR.
+    const texto = `Olá! Fiquei interessado em saber mais sobre os serviços oferecidos.
 
 Nome: ${formData.name}
 Empresa: ${formData.company}
@@ -48,8 +48,8 @@ Tipo de serviço: ${formData.serviceType}
 Mensagem:
 ${formData.message}`
 
-    const numero = "5585987007255"
-    const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`
+    const email = "comercial@hnprotec.com.br"
+    const url = `${email}?subject=Novo%20Orçamento&body=${encodeURIComponent(texto)}`
 
     window.open(url, "_blank")
   }
@@ -219,7 +219,7 @@ ${formData.message}`
                 asChild
               >
                 <a
-                  href="https://wa.me/5585987007255"
+                  href="mailto:comercial@hnprotec.com.br"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
