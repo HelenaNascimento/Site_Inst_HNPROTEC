@@ -52,6 +52,39 @@ function getLeadSource() {
   return "site"
 }
 
+function buildMailtoLink(data: {
+  name: string
+  company: string
+  email: string
+  whatsapp: string
+  serviceType: string
+  message: string
+}) {
+  const subject = encodeURIComponent(`Solicitação de orçamento - ${data.serviceType}`)
+  const body = encodeURIComponent(
+    [
+      "Olá, HNPRO.",
+      "",
+      "Gostaria de solicitar um orçamento com as seguintes informações:",
+      "",
+      `Nome: ${data.name}`,
+      `Empresa: ${data.company || "Não informada"}`,
+      `E-mail: ${data.email}`,
+      `Telefone/WhatsApp: ${data.whatsapp}`,
+      `Tipo de serviço: ${data.serviceType}`,
+      `Origem: ${getLeadSource()}`,
+      `Página: ${window.location.href}`,
+      "",
+      "Mensagem:",
+      data.message,
+      "",
+      "Atenciosamente.",
+    ].join("\n"),
+  )
+
+  return `mailto:comercial@hnpro.tec.br?subject=${subject}&body=${body}`
+}
+
 export function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
@@ -73,30 +106,12 @@ export function ContactSection() {
       return
     }
 
-    setStatus("sending")
-    setFeedbackMessage("")
-
     try {
-      const response = await fetch("/api/orcamentos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          source: getLeadSource(),
-          pageUrl: window.location.href,
-        }),
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        throw new Error(result?.message || "Não foi possível enviar sua solicitação agora.")
-      }
+      const mailtoLink = buildMailtoLink(formData)
+      window.location.href = mailtoLink
 
       setStatus("success")
-      setFeedbackMessage("Solicitação enviada com sucesso. Em breve entraremos em contato.")
+      setFeedbackMessage("Mensagem preparada para envio ao e-mail comercial.")
       setFormData({
         name: "",
         company: "",
@@ -110,7 +125,7 @@ export function ContactSection() {
       setFeedbackMessage(
         error instanceof Error
           ? error.message
-          : "Não foi possível enviar sua solicitação agora.",
+          : "Não foi possível preparar seu e-mail agora.",
       )
     }
   }
@@ -129,7 +144,7 @@ export function ContactSection() {
           </h2>
 
           <p className="text-lg text-muted-foreground">
-            Envie sua solicitação de orçamento por e-mail para nossa equipe comercial.
+            Envie sua solicitação diretamente por e-mail para nossa equipe comercial.
           </p>
         </div>
 
@@ -283,11 +298,10 @@ export function ContactSection() {
               <Button
                 type="submit"
                 size="lg"
-                disabled={status === "sending"}
                 className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Send className="w-4 h-4 mr-2" />
-                {status === "sending" ? "Enviando..." : "Enviar orçamento por e-mail"}
+                Enviar por e-mail
               </Button>
 
               <Button
