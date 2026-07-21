@@ -63,7 +63,6 @@ export function ContactSection() {
   })
   const [status, setStatus] = useState<SubmitStatus>("idle")
   const [feedbackMessage, setFeedbackMessage] = useState("")
-  const [quoteCode, setQuoteCode] = useState("")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -76,7 +75,6 @@ export function ContactSection() {
 
     setStatus("sending")
     setFeedbackMessage("")
-    setQuoteCode("")
 
     try {
       const response = await fetch("/api/orcamentos", {
@@ -98,10 +96,7 @@ export function ContactSection() {
       }
 
       setStatus("success")
-      setQuoteCode(result.quoteCode)
-      setFeedbackMessage(
-        `Solicitação enviada por e-mail. Protocolo do orçamento: ${result.quoteCode}.`,
-      )
+      setFeedbackMessage("Solicitação enviada com sucesso. Em breve entraremos em contato.")
       setFormData({
         name: "",
         company: "",
@@ -308,12 +303,6 @@ export function ContactSection() {
                 </a>
               </Button>
             </div>
-
-            {quoteCode && (
-              <p className="text-center text-xs text-muted-foreground">
-                Guarde o código {quoteCode} para acompanhar sua solicitação.
-              </p>
-            )}
           </form>
         </div>
       </div>
