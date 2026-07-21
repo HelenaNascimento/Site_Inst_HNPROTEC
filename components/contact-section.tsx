@@ -33,7 +33,6 @@ function getLeadSource() {
 
   const params = new URLSearchParams(window.location.search)
   const source =
-    params.get("orcigem") ||
     params.get("origem") ||
     params.get("utm_source") ||
     params.get("source")
