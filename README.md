@@ -24,36 +24,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Orçamentos por e-mail
+## Contato por e-mail
 
-O formulário de contato envia solicitações para:
+O formulário de contato prepara um e-mail padrão para:
 
 ```text
 comercial@hnpro.tec.br
 ```
 
-A rota responsável é:
-
-```text
-POST /api/orcamentos
-```
-
-### Variáveis de ambiente
-
-Configure estas variáveis no ambiente de produção, por exemplo na Vercel:
-
-```env
-RESEND_API_KEY=cole_a_chave_da_resend_aqui
-CONTACT_FROM_EMAIL=HNPRO.TEC.BR <no-reply@hnpro.tec.br>
-UPSTASH_REDIS_REST_URL=cole_a_url_rest_do_upstash_aqui
-UPSTASH_REDIS_REST_TOKEN=cole_o_token_rest_do_upstash_aqui
-```
-
-- `RESEND_API_KEY`: obrigatória para envio automático de e-mail.
-- `CONTACT_FROM_EMAIL`: remetente validado no Resend. O domínio precisa estar verificado para envio em produção.
-- `UPSTASH_REDIS_REST_URL` e `UPSTASH_REDIS_REST_TOKEN`: usadas para gerar a sequência global `Orc.0001`, `Orc.0002`, `Orc.0003`.
-
-Sem o Redis configurado, o sistema gera uma chave única baseada em data e hora para evitar duplicidade, mas a sequência numérica global só é garantida com o contador persistente.
+Ao enviar o formulário, o navegador abre o cliente de e-mail com assunto e mensagem prontos, sem depender de backend ou variáveis de ambiente.
 
 ### Identificação da origem
 
@@ -65,7 +44,7 @@ https://hnpro.tec.br?utm_source=google_ads#contato
 https://hnpro.tec.br?source=indicacao#contato
 ```
 
-A origem é incluída no assunto e no corpo do e-mail do orçamento.
+A origem é incluída no corpo do e-mail do orçamento.
 
 ## Learn More
 
