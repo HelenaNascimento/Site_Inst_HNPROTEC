@@ -7,6 +7,7 @@ import {
   GraduationCap 
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { Reveal } from "@/components/reveal"
 
 const services = [
   {
@@ -43,10 +44,10 @@ const services = [
 
 export function ServicesSection() {
   return (
-    <section id="servicos" className="py-24 lg:py-32 relative">
+    <section id="servicos" className="section-atmosphere section-atmosphere-grid py-24 lg:py-32 relative">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <Reveal className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-balance">
             <span className="text-foreground">Soluções digitais para o </span>
             <span className="text-gradient">crescimento da sua empresa</span>
@@ -54,23 +55,24 @@ export function ServicesSection() {
           <p className="text-lg text-muted-foreground leading-relaxed">
             Da presença digital à automação inteligente, criamos soluções práticas para transformar processos em resultados.
           </p>
-        </div>
+        </Reveal>
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
-            <Card 
-              key={index}
-              className="bg-card/50 border-border hover:border-primary/50 transition-all duration-300 group hover:shadow-lg hover:shadow-primary/5"
-            >
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-[var(--neon-purple)]/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <service.icon className="w-6 h-6 text-primary" />
+            <Reveal key={service.title} delayMs={index * 80}>
+              <Card 
+                className="card-lift h-full bg-card/50 border-border group"
+              >
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[var(--neon-blue)]/25 to-[var(--neon-purple)]/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ring-1 ring-[var(--neon-blue)]/20">
+                  <service.icon className="w-6 h-6 text-[var(--neon-blue)]" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">{service.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{service.description}</p>
-              </CardContent>
-            </Card>
+                  <h3 className="text-xl font-semibold text-foreground mb-3">{service.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+                </CardContent>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </div>

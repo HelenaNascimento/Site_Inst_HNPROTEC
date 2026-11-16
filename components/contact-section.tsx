@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Reveal } from "@/components/reveal"
 
 const serviceTypes = [
   "Criação de Site",
@@ -131,9 +132,14 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contato" className="py-24 lg:py-32 relative">
-      <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+    <section id="contato" className="section-atmosphere py-24 lg:py-32 relative overflow-hidden">
+      <div
+        className="neon-orb w-[420px] h-[420px] top-1/3 left-1/2 -translate-x-1/2 bg-primary/20"
+        aria-hidden
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
+        <Reveal className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-balance">
             <span className="text-foreground">
               Vamos transformar sua ideia em{" "}
@@ -146,13 +152,18 @@ export function ContactSection() {
           <p className="text-lg text-muted-foreground">
             Envie sua solicitação diretamente por e-mail para nossa equipe comercial.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="max-w-2xl mx-auto">
+        <Reveal delayMs={100} className="max-w-2xl mx-auto">
           <form
             onSubmit={handleSubmit}
-            className="bg-card/50 border border-border rounded-2xl p-6 lg:p-8 space-y-6"
+            className="neon-edge bg-card/60 backdrop-blur-sm border border-border rounded-2xl p-6 lg:p-8 space-y-6 relative overflow-hidden"
           >
+            <div
+              className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--neon-blue)] to-transparent opacity-80"
+              aria-hidden
+            />
+
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome</Label>
@@ -167,7 +178,7 @@ export function ContactSection() {
                       name: e.target.value,
                     })
                   }
-                  className="bg-input border-border"
+                  className="bg-input border-border focus-visible:border-primary/50"
                   required
                 />
               </div>
@@ -185,7 +196,7 @@ export function ContactSection() {
                       company: e.target.value,
                     })
                   }
-                  className="bg-input border-border"
+                  className="bg-input border-border focus-visible:border-primary/50"
                 />
               </div>
             </div>
@@ -205,7 +216,7 @@ export function ContactSection() {
                       email: e.target.value,
                     })
                   }
-                  className="bg-input border-border"
+                  className="bg-input border-border focus-visible:border-primary/50"
                   required
                 />
               </div>
@@ -223,7 +234,7 @@ export function ContactSection() {
                       whatsapp: e.target.value,
                     })
                   }
-                  className="bg-input border-border"
+                  className="bg-input border-border focus-visible:border-primary/50"
                   required
                 />
               </div>
@@ -272,7 +283,7 @@ export function ContactSection() {
                     message: e.target.value,
                   })
                 }
-                className="bg-input border-border resize-none"
+                className="bg-input border-border resize-none focus-visible:border-primary/50"
                 required
               />
             </div>
@@ -298,7 +309,7 @@ export function ContactSection() {
               <Button
                 type="submit"
                 size="lg"
-                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="cta-glow flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Send className="w-4 h-4 mr-2" />
                 Enviar por e-mail
@@ -308,7 +319,7 @@ export function ContactSection() {
                 type="button"
                 variant="outline"
                 size="lg"
-                className="flex-1 border-border hover:bg-secondary"
+                className="flex-1 border-border hover:bg-secondary hover:border-primary/40"
                 asChild
               >
                 <a href="mailto:comercial@hnpro.tec.br">
@@ -318,7 +329,7 @@ export function ContactSection() {
               </Button>
             </div>
           </form>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

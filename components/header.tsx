@@ -38,7 +38,7 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="#inicio" className="flex items-center gap-2">
+          <Link href="#inicio" className="logo-glow flex items-center gap-2">
             <span className="text-xl lg:text-2xl font-bold text-gradient">
               HNPROTEC
             </span>
@@ -50,7 +50,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="nav-link px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {item.label}
               </Link>
@@ -59,7 +59,7 @@ export function Header() {
 
           {/* CTA Button */}
           <div className="hidden lg:flex">
-            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button asChild className="cta-glow bg-primary hover:bg-primary/90 text-primary-foreground">
               <Link href="#contato">Solicitar orçamento</Link>
             </Button>
           </div>
@@ -89,7 +89,7 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Button asChild className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button asChild className="mt-4 cta-glow bg-primary hover:bg-primary/90 text-primary-foreground">
               <Link href="#contato" onClick={() => setIsMobileMenuOpen(false)}>
                 Solicitar orçamento
               </Link>
