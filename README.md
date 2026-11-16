@@ -24,15 +24,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Contato por e-mail
+## Contato por WhatsApp
 
-O formulário de contato prepara um e-mail padrão para:
+O formulário de contato abre o WhatsApp com a mensagem de orçamento pronta para:
 
 ```text
-comercial@hnpro.tec.br
+https://wa.me/5585987007255
 ```
 
-Ao enviar o formulário, o navegador abre o cliente de e-mail com assunto e mensagem prontos, sem depender de backend ou variáveis de ambiente.
+Ao enviar o formulário, o navegador abre o WhatsApp (web ou app) com os dados preenchidos, sem depender de backend ou variáveis de ambiente.
 
 ### Identificação da origem
 
@@ -44,7 +44,7 @@ https://hnpro.tec.br?utm_source=google_ads#contato
 https://hnpro.tec.br?source=indicacao#contato
 ```
 
-A origem é incluída no corpo do e-mail do orçamento.
+A origem é incluída na mensagem enviada pelo WhatsApp.
 
 ## Learn More
 

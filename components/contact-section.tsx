@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { AlertCircle, CheckCircle2, Mail, Send } from "lucide-react"
+import { AlertCircle, CheckCircle2, MessageCircle, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Reveal } from "@/components/reveal"
+
+const WHATSAPP_NUMBER = "5585987007255"
 
 const serviceTypes = [
   "Criação de Site",
@@ -53,7 +55,7 @@ function getLeadSource() {
   return "site"
 }
 
-function buildMailtoLink(data: {
+function buildWhatsAppLink(data: {
   name: string
   company: string
   email: string
@@ -61,29 +63,21 @@ function buildMailtoLink(data: {
   serviceType: string
   message: string
 }) {
-  const subject = encodeURIComponent(`Solicitação de orçamento - ${data.serviceType}`)
-  const body = encodeURIComponent(
-    [
-      "Olá, HNPRO.",
-      "",
-      "Gostaria de solicitar um orçamento com as seguintes informações:",
-      "",
-      `Nome: ${data.name}`,
-      `Empresa: ${data.company || "Não informada"}`,
-      `E-mail: ${data.email}`,
-      `Telefone/WhatsApp: ${data.whatsapp}`,
-      `Tipo de serviço: ${data.serviceType}`,
-      `Origem: ${getLeadSource()}`,
-      `Página: ${window.location.href}`,
-      "",
-      "Mensagem:",
-      data.message,
-      "",
-      "Atenciosamente.",
-    ].join("\n"),
-  )
+  const text = [
+    "Olá! Recebi uma nova solicitação de orçamento pelo site HNPRO.TEC.BR.",
+    "",
+    `Nome: ${data.name}`,
+    `Empresa: ${data.company || "Não informada"}`,
+    `E-mail: ${data.email}`,
+    `WhatsApp: ${data.whatsapp}`,
+    `Tipo de serviço: ${data.serviceType}`,
+    `Origem: ${getLeadSource()}`,
+    "",
+    "Mensagem:",
+    data.message,
+  ].join("\n")
 
-  return `mailto:comercial@hnpro.tec.br?subject=${subject}&body=${body}`
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`
 }
 
 export function ContactSection() {
@@ -98,7 +92,7 @@ export function ContactSection() {
   const [status, setStatus] = useState<SubmitStatus>("idle")
   const [feedbackMessage, setFeedbackMessage] = useState("")
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!formData.serviceType) {
@@ -108,11 +102,11 @@ export function ContactSection() {
     }
 
     try {
-      const mailtoLink = buildMailtoLink(formData)
-      window.location.href = mailtoLink
+      const whatsappLink = buildWhatsAppLink(formData)
+      window.open(whatsappLink, "_blank", "noopener,noreferrer")
 
       setStatus("success")
-      setFeedbackMessage("Mensagem preparada para envio ao e-mail comercial.")
+      setFeedbackMessage("Solicitação aberta no WhatsApp. É só enviar a mensagem.")
       setFormData({
         name: "",
         company: "",
@@ -126,7 +120,7 @@ export function ContactSection() {
       setFeedbackMessage(
         error instanceof Error
           ? error.message
-          : "Não foi possível preparar seu e-mail agora.",
+          : "Não foi possível abrir o WhatsApp agora.",
       )
     }
   }
@@ -150,7 +144,7 @@ export function ContactSection() {
           </h2>
 
           <p className="text-lg text-muted-foreground">
-            Envie sua solicitação diretamente por e-mail para nossa equipe comercial.
+            Entre em contato e solicite uma proposta pelo WhatsApp.
           </p>
         </Reveal>
 
@@ -222,7 +216,7 @@ export function ContactSection() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="whatsapp">Telefone ou WhatsApp</Label>
+                <Label htmlFor="whatsapp">WhatsApp</Label>
                 <Input
                   id="whatsapp"
                   name="whatsapp"
@@ -312,7 +306,7 @@ export function ContactSection() {
                 className="cta-glow flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Send className="w-4 h-4 mr-2" />
-                Enviar por e-mail
+                Enviar solicitação
               </Button>
 
               <Button
@@ -322,9 +316,13 @@ export function ContactSection() {
                 className="flex-1 border-border hover:bg-secondary hover:border-primary/40"
                 asChild
               >
-                <a href="mailto:comercial@hnpro.tec.br">
-                  <Mail className="w-4 h-4 mr-2" />
-                  comercial@hnpro.tec.br
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Falar pelo WhatsApp
                 </a>
               </Button>
             </div>
